@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Thesis Proposal Generator</title>
+    <title>Elite Thesis Manager - Bilingual</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -14,451 +14,402 @@
                 extend: {
                     fontFamily: {
                         sans: ['Cairo', 'sans-serif'],
-                        serif: ['Amiri', 'Times New Roman', 'serif'], // For the proposal paper
-                        mono: ['Courier New', 'monospace'],
+                        serif: ['Amiri', 'Times New Roman', 'serif'],
                     },
                     colors: {
-                        slate: { 850: '#1e293b', 900: '#0f172a' },
-                        blue: { 650: '#2563eb' }
+                        slate: { 850: '#1e293b', 900: '#0f172a' }
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #f3f4f6; }
+        body { background-color: #f1f5f9; }
         
-        /* Proposal Paper Styling */
+        /* ورقة A4 للمعاينة والطباعة */
         .a4-paper {
             background: white;
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
-            padding: 20mm;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 25mm;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
             font-family: 'Times New Roman', 'Amiri', serif;
             color: #000;
             line-height: 1.6;
-            font-size: 12pt;
-        }
-        
-        .a4-paper h1 { font-size: 18pt; font-weight: bold; text-align: center; margin-bottom: 10px; }
-        .a4-paper h2 { font-size: 14pt; font-weight: bold; margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #000; padding-bottom: 2px; }
-        .a4-paper p { margin-bottom: 12px; text-align: justify; }
-        .a4-paper ul { list-style-type: disc; margin-right: 20px; margin-left: 20px; margin-bottom: 12px; }
-        .a4-paper li { margin-bottom: 5px; }
-        
-        /* Print Settings */
-        @media print {
-            body * { visibility: hidden; }
-            #proposal-modal, #proposal-modal * { visibility: visible; }
-            #proposal-modal { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white; z-index: 9999; }
-            .no-print { display: none !important; }
-            .a4-paper { box-shadow: none; margin: 0; width: 100%; padding: 15mm; }
+            font-size: 14pt;
         }
 
-        /* Editor Highlight */
+        /* تنسيق الطباعة الفعلي - إصلاح مشاكل اللغة العربية */
+        @media print {
+            body * { visibility: hidden; } /* إخفاء الواجهة */
+            #proposal-modal { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                height: 100%; 
+                background: white; 
+                z-index: 9999;
+                overflow: visible;
+                display: block !important;
+            }
+            #paper-content, #paper-content * { visibility: visible; } /* إظهار الورقة فقط */
+            .a4-paper {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+                padding: 15mm;
+                page-break-after: always;
+            }
+            .no-print { display: none !important; }
+        }
+
+        /* تمييز المناطق القابلة للتعديل */
         [contenteditable="true"]:hover {
-            background-color: rgba(255, 255, 0, 0.1);
-            outline: 1px dashed #ccc;
+            background-color: #fffbeb;
+            outline: 1px dashed #d97706;
             cursor: text;
         }
-        
+
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
     </style>
 </head>
-<body class="text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
+<body class="text-slate-800 antialiased h-screen flex flex-col overflow-hidden font-sans">
 
     <!-- Navbar -->
-    <nav class="bg-slate-900 text-white shadow-md z-50 flex-none no-print">
+    <nav class="bg-slate-900 text-white shadow-lg z-50 flex-none no-print">
         <div class="max-w-[1920px] mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="bg-blue-600 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl shadow-blue-500/50">20</div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight" id="nav-title">مولد المقترحات البحثية المتقدمة</h1>
-                    <p class="text-[11px] text-slate-400 font-mono tracking-wider">Telecom Thesis Proposal Generator</p>
+                    <h1 class="font-bold text-lg leading-tight" id="nav-title">مدير المقترحات البحثية</h1>
+                    <p class="text-[11px] text-slate-400 font-mono tracking-wider">v4.0 Final Bilingual</p>
                 </div>
             </div>
             
-            <button onclick="toggleLang()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-1.5 rounded-full transition-colors text-sm font-bold">
-                <span id="lang-icon">EN</span>
-                <span id="lang-btn-text">Switch to English</span>
+            <button onclick="toggleLang()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-1.5 rounded-full transition-colors text-sm font-bold group">
+                <span class="w-2 h-2 rounded-full bg-green-400 group-hover:animate-pulse"></span>
+                <span id="lang-btn-text">English Interface</span>
             </button>
         </div>
     </nav>
 
     <!-- Main Layout -->
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1 overflow-hidden no-print">
         
-        <!-- Sidebar (Topic List) -->
-        <aside class="w-1/3 max-w-sm bg-white border-r border-slate-200 flex flex-col z-20 shadow-xl no-print">
+        <!-- Sidebar -->
+        <aside class="w-1/3 max-w-sm bg-white border-r border-slate-200 flex flex-col z-20 shadow-xl">
             <div class="p-4 bg-slate-50 border-b border-slate-200">
+                <h2 class="text-xs font-bold text-slate-500 uppercase mb-2 flex justify-between">
+                    <span id="sidebar-title">قائمة المواضيع</span>
+                    <span class="bg-blue-100 text-blue-700 px-1.5 rounded text-[10px]">20</span>
+                </h2>
                 <div class="relative">
-                    <input type="text" id="search-input" onkeyup="filterList()" placeholder="بحث عن موضوع..." class="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-shadow">
-                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="search-input" onkeyup="filterList()" placeholder="بحث..." class="w-full pl-9 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-shadow">
+                    <svg class="w-4 h-4 text-slate-400 absolute top-2.5 left-3 rtl:right-auto rtl:left-3 ltr:left-auto ltr:right-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
             </div>
-            <div class="overflow-y-auto flex-1 p-3 space-y-2" id="topic-list">
-                <!-- List Items Injected Here -->
+            <div class="overflow-y-auto flex-1 p-2 space-y-2 bg-slate-50/50" id="topic-list">
+                <!-- Topics List -->
             </div>
         </aside>
 
-        <!-- Main Content (Detail View) -->
+        <!-- Detail View -->
         <main class="flex-1 flex flex-col relative overflow-hidden bg-slate-100">
-            
             <!-- Empty State -->
             <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 z-0">
-                <svg class="w-16 h-16 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                <p class="text-lg font-medium">اختر موضوعاً لعرض التفاصيل وإنشاء الخطة</p>
+                <div class="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <p class="text-xl font-bold" id="select-msg">اختر موضوعاً لاستعراض التفاصيل</p>
             </div>
 
-            <!-- Detail Panel -->
-            <div id="detail-panel" class="hidden flex-1 flex flex-col h-full overflow-y-auto z-10 fade-in no-print bg-slate-50">
-                
-                <!-- Topic Header -->
-                <div class="bg-white p-8 border-b border-slate-200">
-                    <div class="max-w-4xl mx-auto">
-                        <div class="flex items-center gap-3 mb-4">
-                            <span id="dt-cat" class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wider">CAT</span>
-                            <span id="dt-tool" class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-mono border border-slate-200">TOOL</span>
-                        </div>
-                        <h1 id="dt-title" class="text-3xl font-bold text-slate-800 mb-2 leading-tight">Title</h1>
-                        <h2 id="dt-title-en" class="text-lg text-slate-500 font-serif italic dir-ltr text-left">English Title</h2>
+            <!-- Content Panel -->
+            <div id="detail-panel" class="hidden flex-1 flex flex-col h-full overflow-y-auto z-10 fade-in bg-slate-50">
+                <div class="bg-white p-8 border-b border-slate-200 shadow-sm sticky top-0 z-20">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span id="dt-cat" class="px-2.5 py-0.5 bg-blue-100 text-blue-800 rounded-md text-xs font-bold uppercase tracking-wide">CAT</span>
+                        <span id="dt-tool" class="px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-md text-xs font-mono border border-slate-200">TOOL</span>
                     </div>
+                    <h1 id="dt-title" class="text-2xl md:text-3xl font-bold text-slate-800 leading-tight mb-1">Title Placeholder</h1>
                 </div>
 
-                <!-- Content -->
-                <div class="flex-1 p-8 overflow-y-auto">
-                    <div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        
-                        <!-- Left Column (Main) -->
-                        <div class="lg:col-span-2 space-y-6">
-                            
-                            <!-- Action Card -->
-                            <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-white shadow-lg flex items-center justify-between group cursor-pointer hover:shadow-xl transition-all" onclick="generateProposal()">
-                                <div>
-                                    <h3 class="font-bold text-xl mb-1 text-blue-400 group-hover:text-blue-300">إنشاء وثيقة خطة البحث</h3>
-                                    <p class="text-slate-300 text-sm">توليد ملف PDF كامل (Full Proposal) جاهز للطباعة والتسليم</p>
-                                </div>
-                                <div class="bg-white/10 p-3 rounded-lg group-hover:bg-white/20 transition">
-                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                </div>
+                <div class="p-8 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+                    <!-- Main Info -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Action Button -->
+                        <div onclick="openProposalModal()" class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white rounded-xl p-6 shadow-xl cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all flex justify-between items-center group">
+                            <div>
+                                <h3 class="font-bold text-xl mb-1 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    <span id="btn-gen-title">تجهيز ملف المقترح (Proposal)</span>
+                                </h3>
+                                <p class="text-blue-200 text-sm" id="btn-gen-desc">إنشاء ملف كامل جاهز للطباعة والتعديل</p>
                             </div>
-
-                            <!-- Abstract Box -->
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                                <h4 class="font-bold text-slate-800 mb-2">الملخص التقني</h4>
-                                <p id="dt-abstract" class="text-slate-600 leading-relaxed text-justify"></p>
-                            </div>
-
-                            <!-- Key Points -->
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="bg-red-50 p-4 rounded-lg border border-red-100">
-                                    <h4 class="text-xs font-bold text-red-800 uppercase mb-2">المشكلة (Gap)</h4>
-                                    <p id="dt-gap" class="text-sm text-red-900"></p>
-                                </div>
-                                <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                                    <h4 class="text-xs font-bold text-green-800 uppercase mb-2">الحل (Solution)</h4>
-                                    <p id="dt-sol" class="text-sm text-green-900"></p>
-                                </div>
+                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </div>
                         </div>
 
-                        <!-- Right Column (Stats) -->
-                        <div class="space-y-6">
-                            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                                <h4 class="text-sm font-bold text-slate-500 uppercase mb-4 text-center">مستوى الصعوبة</h4>
-                                <div class="h-48">
-                                    <canvas id="radarChart"></canvas>
-                                </div>
-                            </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="w-1 h-5 bg-blue-500 rounded-full"></span>
+                                <span id="lbl-abstract">الملخص</span>
+                            </h4>
+                            <p id="dt-abstract" class="text-slate-600 leading-relaxed text-justify text-base"></p>
                         </div>
+                    </div>
 
+                    <!-- Side Stats -->
+                    <div class="space-y-6">
+                         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase mb-4 text-center">Difficulty Metrics</h4>
+                            <div class="h-48 relative"><canvas id="radarChart"></canvas></div>
+                         </div>
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 
-    <!-- Full Proposal Modal (A4 View) -->
-    <div id="proposal-modal" class="hidden fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm overflow-y-auto py-8">
+    <!-- Proposal Modal (Full Screen Overlay) -->
+    <div id="proposal-modal" class="hidden fixed inset-0 bg-slate-900/95 backdrop-blur-sm z-50 overflow-y-auto pt-4 pb-20 flex justify-center">
         
-        <!-- Controls (No Print) -->
-        <div class="fixed top-4 right-4 z-50 flex gap-2 no-print">
-            <div class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded text-xs font-bold shadow mr-4 flex items-center">
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                يمكنك الضغط على أي نص للتعديل
-            </div>
-            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold shadow-lg transition-transform hover:scale-105 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4h10z"></path></svg>
-                طباعة / PDF
+        <!-- Toolbar (No Print) -->
+        <div class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow-2xl z-50 flex gap-2 border border-slate-200 no-print transition-all hover:scale-105">
+            <button onclick="downloadWord()" class="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded-full font-bold transition-colors shadow-md">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span id="btn-dl-word">تحميل Word</span>
             </button>
-            <button onclick="document.getElementById('proposal-modal').classList.add('hidden')" class="bg-white hover:bg-slate-100 text-slate-800 px-6 py-2 rounded-full font-bold shadow-lg">
-                إغلاق
+            <button onclick="printProposal()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-full font-bold transition-colors shadow-md">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4h10z"></path></svg>
+                <span id="btn-dl-pdf">حفظ PDF (طباعة)</span>
+            </button>
+            <div class="w-px bg-slate-300 mx-1"></div>
+            <button onclick="closeModal()" class="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-bold transition-colors">
+                <span id="btn-close">إغلاق</span>
             </button>
         </div>
 
-        <!-- The Paper Document -->
-        <div class="a4-paper relative" id="paper-content">
-            
-            <!-- Header -->
-            <div class="text-center mb-8 pb-4 border-b-2 border-black" contenteditable="true">
-                <p class="text-sm">جامعة [اسم الجامعة]</p>
-                <p class="text-sm">كلية الهندسة - قسم هندسة الاتصالات والإلكترونيات</p>
-                <br>
-                <h1 class="text-xl">خطة بحث لرسالة الماجستير (Thesis Proposal)</h1>
-                <h2 id="doc-title" class="text-lg font-bold border-none mt-2"></h2>
-                <h3 id="doc-title-en" class="text-md font-serif italic dir-ltr mt-1"></h3>
-            </div>
-
-            <!-- Student Info -->
-            <div class="mb-6 grid grid-cols-2 gap-4 text-sm" contenteditable="true">
-                <div><strong>إعداد الطالب:</strong> ___________________</div>
-                <div><strong>إشراف الدكتور:</strong> ___________________</div>
-                <div><strong>التاريخ:</strong> <span id="doc-date"></span></div>
-            </div>
-
-            <!-- 1. Introduction -->
-            <div class="mb-6">
-                <h2 contenteditable="true">1. المقدمة والدوافع (Introduction & Motivation)</h2>
-                <p id="doc-intro" contenteditable="true"></p>
-            </div>
-
-            <!-- 2. Problem Statement -->
-            <div class="mb-6">
-                <h2 contenteditable="true">2. مشكلة البحث (Problem Statement)</h2>
-                <p id="doc-problem" contenteditable="true"></p>
-                <p>ويمكن تلخيص الأسئلة البحثية كالتالي:</p>
-                <ul id="doc-questions" contenteditable="true"></ul>
-            </div>
-
-            <!-- 3. Objectives -->
-            <div class="mb-6">
-                <h2 contenteditable="true">3. أهداف البحث (Objectives)</h2>
-                <p>يهدف هذا البحث بشكل رئيسي إلى:</p>
-                <ul id="doc-objs" contenteditable="true"></ul>
-            </div>
-
-            <!-- 4. Methodology -->
-            <div class="mb-6">
-                <h2 contenteditable="true">4. المنهجية المقترحة (Proposed Methodology)</h2>
-                <p id="doc-method-intro" contenteditable="true"></p>
+        <!-- Paper Preview Container -->
+        <div id="paper-container" class="mt-20 mb-10 w-full flex justify-center">
+            <!-- The A4 Paper -->
+            <div id="paper-content" class="a4-paper relative">
                 
-                <div class="pl-4 pr-4 border-l-2 border-slate-300 my-4" contenteditable="true">
-                    <strong>أ. نموذج النظام (System Model):</strong>
-                    <p id="doc-sys-model"></p>
-                </div>
-                
-                <div class="pl-4 pr-4 border-l-2 border-slate-300 my-4" contenteditable="true">
-                    <strong>ب. الخوارزميات المقترحة (Proposed Algorithms):</strong>
-                    <p id="doc-algo"></p>
-                </div>
-
-                <div class="pl-4 pr-4 border-l-2 border-slate-300 my-4" contenteditable="true">
-                    <strong>ج. بيئة المحاكاة والتقييم (Simulation & Evaluation):</strong>
-                    <p id="doc-sim-tools"></p>
-                    <p>سيتم تقييم الأداء بناءً على المعايير التالية: <span id="doc-metrics"></span>.</p>
-                </div>
-            </div>
-
-            <!-- 5. Expected Outcomes -->
-            <div class="mb-6">
-                <h2 contenteditable="true">5. النتائج المتوقعة (Expected Outcomes)</h2>
-                <ul id="doc-outcomes" contenteditable="true"></ul>
-            </div>
-
-            <!-- 6. Timeline -->
-            <div class="mb-6">
-                <h2 contenteditable="true">6. الجدول الزمني (Timeline)</h2>
-                <div class="border border-black p-4 text-sm" contenteditable="true">
-                    <ul class="list-none m-0 p-0">
-                        <li><strong>الشهر 1-3:</strong> مراجعة الأدبيات (Literature Review) وفهم النظريات الأساسية.</li>
-                        <li><strong>الشهر 4-6:</strong> النمذجة الرياضية وتصميم الخوارزمية (System Modeling & Design).</li>
-                        <li><strong>الشهر 7-9:</strong> تنفيذ المحاكاة وجمع النتائج (Simulation & Results).</li>
-                        <li><strong>الشهر 10-12:</strong> تحسين النتائج وكتابة الرسالة (Optimization & Thesis Writing).</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- 7. References -->
-            <div class="mb-6">
-                <h2 contenteditable="true">7. المراجع الأولية (Preliminary References)</h2>
-                <ul id="doc-refs" class="dir-ltr text-left font-serif text-sm" contenteditable="true"></ul>
-            </div>
-
-            <!-- Signatures -->
-            <div class="mt-12 pt-8 border-t border-black flex justify-between" contenteditable="true">
-                <div class="text-center w-1/3">
-                    <p>توقيع الطالب</p>
+                <!-- 1. Header -->
+                <div class="text-center mb-8 pb-6 border-b-2 border-black" contenteditable="true">
+                    <p class="text-base font-bold" id="txt-uni">[اسم الجامعة]</p>
+                    <p class="text-base font-bold" id="txt-college">[اسم الكلية - اسم القسم]</p>
                     <br>
-                    <p>__________________</p>
+                    <h1 class="text-2xl font-extrabold uppercase" id="paper-header-text">خطة بحث لرسالة الماجستير</h1>
+                    <h2 id="paper-title" class="text-xl font-bold mt-4 border-none text-blue-900" style="border:none;"></h2>
                 </div>
-                <div class="text-center w-1/3">
-                    <p>توقيع المشرف</p>
-                    <br>
-                    <p>__________________</p>
-                </div>
-            </div>
 
+                <!-- 2. Meta Info Table-like -->
+                <div class="mb-8 p-4 border border-slate-300 rounded bg-slate-50/50 text-base" contenteditable="true">
+                    <div class="grid grid-cols-2 gap-y-4">
+                        <div><strong><span id="lbl-student">الطالب:</span></strong> [الاسم هنا]</div>
+                        <div><strong><span id="lbl-supervisor">المشرف:</span></strong> [الاسم هنا]</div>
+                        <div><strong><span id="lbl-date">التاريخ:</span></strong> <span id="paper-date"></span></div>
+                    </div>
+                </div>
+
+                <!-- 3. Sections -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold border-b border-black mb-3 uppercase" id="head-intro">1. المقدمة</h2>
+                        <p id="paper-intro" contenteditable="true" class="text-justify"></p>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg font-bold border-b border-black mb-3 uppercase" id="head-problem">2. مشكلة البحث</h2>
+                        <p id="paper-problem" contenteditable="true" class="text-justify"></p>
+                        <p class="mt-2 font-bold" id="lbl-questions">أسئلة البحث:</p>
+                        <ul id="paper-questions" class="list-disc ltr:pl-6 rtl:pr-6" contenteditable="true"></ul>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg font-bold border-b border-black mb-3 uppercase" id="head-objs">3. الأهداف</h2>
+                        <ul id="paper-objs" class="list-disc ltr:pl-6 rtl:pr-6" contenteditable="true"></ul>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg font-bold border-b border-black mb-3 uppercase" id="head-method">4. المنهجية</h2>
+                        <p id="paper-method-intro" contenteditable="true" class="mb-3"></p>
+                        
+                        <div class="my-4 ltr:pl-4 rtl:pr-4 ltr:border-l-4 rtl:border-r-4 border-slate-300 bg-slate-50 p-3 text-sm" contenteditable="true">
+                            <strong><span id="lbl-sys">أ. نموذج النظام:</span></strong>
+                            <p id="paper-sys-model" class="mt-1"></p>
+                        </div>
+                        
+                        <div class="my-4 ltr:pl-4 rtl:pr-4 ltr:border-l-4 rtl:border-r-4 border-slate-300 bg-slate-50 p-3 text-sm" contenteditable="true">
+                            <strong><span id="lbl-algo">ب. الخوارزميات:</span></strong>
+                            <p id="paper-algo" class="mt-1"></p>
+                        </div>
+
+                        <div class="my-4 ltr:pl-4 rtl:pr-4 ltr:border-l-4 rtl:border-r-4 border-slate-300 bg-slate-50 p-3 text-sm" contenteditable="true">
+                            <strong><span id="lbl-tools">ج. الأدوات:</span></strong>
+                            <p id="paper-tools" class="mt-1"></p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg font-bold border-b border-black mb-3 uppercase" id="head-outcomes">5. النتائج المتوقعة</h2>
+                        <ul id="paper-outcomes" class="list-disc ltr:pl-6 rtl:pr-6" contenteditable="true"></ul>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg font-bold border-b border-black mb-3 uppercase" id="head-refs">6. المراجع</h2>
+                        <ul id="paper-refs" class="dir-ltr text-left font-serif text-sm list-decimal pl-6" contenteditable="true"></ul>
+                    </div>
+                </div>
+
+                <!-- Footer Signatures -->
+                <div class="mt-16 pt-8 border-t-2 border-black flex justify-between" contenteditable="true">
+                    <div class="text-center w-1/3">
+                        <p class="font-bold" id="lbl-sig-student">توقيع الطالب</p>
+                        <br><br>
+                        <p>__________________</p>
+                    </div>
+                    <div class="text-center w-1/3">
+                        <p class="font-bold" id="lbl-sig-super">توقيع المشرف</p>
+                        <br><br>
+                        <p>__________________</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <script>
-        // --- Smart Content Generator ---
-        // Generates detailed sections based on topic keywords to ensure uniqueness
-        
+        // --- 20 Topics Data with FULL Bilingual Content ---
         const topics = [
             // 1. Semantic Comm
             {
                 id: 1, cat: "6G / AI", tool: "Python/PyTorch",
-                title: "نظام اتصالات دلالي (Semantic) لنقل الصور بكفاءة فائقة في شبكات 6G",
-                titleEn: "Deep Learning Enabled Semantic Communication for Efficient Image Transmission in 6G",
-                abstract: "تصميم نظام اتصالات يتجاوز حد شانون من خلال نقل 'المعنى' بدلاً من البتات الخام. يستخدم شبكة عصبية لاستخراج الميزات الدلالية للصور وضغطها.",
-                gap: "الأنظمة الحالية (Shannon-based) تهدر الموارد في إرسال تفاصيل بيكسل غير ضرورية للفهم، خاصة عند انخفاض SNR.",
-                sol: "نموذج Joint Source-Channel Coding يعتمد على Vision Transformers (ViT).",
-                
-                // Detailed Proposal Data
-                prop: {
-                    intro: "تشهد شبكات الجيل السادس (6G) تحولاً نوعياً من نقل البيانات (Data Transmission) إلى نقل المعنى (Semantic Transmission). في حين تركز الأنظمة التقليدية على توصيل البتات بدقة خالية من الأخطاء، تركز الاتصالات الدلالية على توصيل المعنى المقصود، مما يفتح آفاقاً جديدة لكفاءة الطيف والطاقة.",
-                    problem: "تواجه أنظمة الاتصالات الحالية تحديات كبيرة في نقل البيانات الضخمة (مثل الصور عالية الدقة والفيديو) عبر قنوات محدودة النطاق الترددي ومعرضة للضجيج. طرق الضغط التقليدية (مثل JPEG) مفصولة عن تشفير القناة، مما يؤدي إلى 'تأثير العتبة' (Threshold Effect) وانهيار الأداء عند انخفاض نسبة الإشارة إلى الضجيج (SNR).",
-                    questions: ["كيف يمكن استخراج الميزات الدلالية من الصور باستخدام التعلم العميق؟", "ما هو تأثير القناة اللاسلكية المتغيرة (Fading Channel) على المعلومات الدلالية؟", "كيف يتفوق نظام JSCC المقترح على الأنظمة التقليدية (Separation-based)؟"],
-                    objs: ["تصميم معمارية شبكة عصبية عميقة (Deep Autoencoder) تعتمد على المحولات (Transformers) للترميز الدلالي.", "تطوير طبقة قناة قابلة للاشتقاق (Differentiable Channel Layer) لتمكين التدريب من طرف لطرف.", "مقارنة الأداء باستخدام مقاييس الإدراك (PSNR, SSIM) ومقاييس الدلالة."],
-                    sys_model: "يتكون النظام من مرسل دلالي (Semantic Encoder) يقوم بضغط الصورة إلى متجهات كامنة (Latent Vectors)، وقناة لاسلكية (AWGN/Rayleigh)، ومستقبل دلالي يقوم بإعادة بناء الصورة أو استنتاج المعنى.",
-                    algo: "سيتم استخدام خوارزمية التدريب المشترك (Joint Training) لتقليل دالة الخسارة التي تجمع بين دقة إعادة البناء (MSE) والتشابه الهيكلي (SSIM).",
-                    sim_tools: "بيئة العمل: Python باستخدام مكتبة PyTorch. سيتم استخدام مجموعات بيانات قياسية مثل CIFAR-10 و ImageNet.",
-                    metrics: "PSNR, SSIM, Bandwidth Compression Ratio (BCR)",
-                    outcomes: ["نموذج أولي لنظام اتصالات دلالي يعمل بكفاءة.", "تحقيق وفر في النطاق الترددي بنسبة تصل إلى 90% مقارنة بـ JPEG+LDPC.", "زيادة المتانة ضد ضجيج القناة."],
-                    refs: [
-                        "H. Xie, Z. Qin, G. Y. Li, and B.-H. Juang, 'Deep Learning Enabled Semantic Communication Systems,' IEEE Trans. Signal Process., 2021.",
-                        "D. Gündüz et al., 'Beyond Transmitting Bits: Context, Semantics, and Task-Oriented Communications,' IEEE J. Sel. Areas Commun., 2023."
-                    ]
+                content: {
+                    ar: {
+                        title: "نظام اتصالات دلالي (Semantic Comm) لنقل الصور بكفاءة عالية",
+                        abstract: "يهدف البحث إلى تجاوز حد شانون من خلال نقل 'المعنى' بدلاً من البتات الخام، باستخدام شبكات التعلم العميق (Deep Autoencoders) لاستخراج الميزات الدلالية للصور.",
+                        intro: "تشهد شبكات الجيل السادس (6G) تحولاً نوعياً من نقل البيانات (Data Transmission) إلى نقل المعنى. في حين تركز الأنظمة التقليدية على توصيل البتات بدقة، تركز الاتصالات الدلالية على توصيل المعنى المقصود، مما يفتح آفاقاً جديدة لكفاءة الطيف.",
+                        problem: "تواجه الأنظمة التقليدية انخفاضاً حاداً في الأداء عند إرسال صور عالية الدقة عبر قنوات ذات نطاق ترددي ضيق وضجيج عالٍ (Low SNR)، حيث تهدر الموارد في إرسال تفاصيل بيكسل غير ضرورية.",
+                        questions: ["كيف يمكن استخراج الميزات الدلالية من الصور بدقة؟", "ما هو تأثير القناة اللاسلكية المتغيرة على المعلومات الدلالية؟", "كيف يتفوق نظام JSCC المقترح على الأنظمة التقليدية؟"],
+                        objs: ["تصميم معمارية شبكة عصبية عميقة (Deep Autoencoder).", "تطوير طبقة قناة قابلة للاشتقاق للتدريب من طرف لطرف.", "مقارنة الأداء باستخدام مقاييس الإدراك (PSNR, SSIM)."],
+                        sys: "يتكون النظام من مرسل دلالي (Encoder) وقناة لاسلكية (AWGN/Rayleigh) ومستقبل دلالي (Decoder).",
+                        algo: "Joint Source-Channel Coding (JSCC) باستخدام دالة خسارة دلالية.",
+                        outcomes: ["نموذج أولي لنظام اتصالات دلالي.", "توفير في النطاق الترددي بنسبة تصل إلى 90% مقارنة بـ JPEG."],
+                        refs: ["H. Xie, Z. Qin, G. Y. Li, 'Deep Learning Enabled Semantic Communication Systems,' IEEE Trans. Signal Process., 2021.", "D. Gündüz et al., 'Beyond Transmitting Bits: Context, Semantics, and Task-Oriented Communications,' IEEE JSAC, 2023."]
+                    },
+                    en: {
+                        title: "Deep Learning Enabled Semantic Communication for Efficient Image Transmission",
+                        abstract: "Aiming to surpass Shannon's limit by transmitting 'meaning' rather than raw bits, using Deep Autoencoders to extract semantic features from images.",
+                        intro: "6G networks are witnessing a paradigm shift from Data Transmission to Semantic Transmission. While traditional systems focus on bit accuracy, semantic communication focuses on conveying meaning, unlocking new spectral efficiency.",
+                        problem: "Traditional systems suffer severe performance degradation when transmitting HD images over low-bandwidth, low-SNR channels, wasting resources on irrelevant pixel details.",
+                        questions: ["How to accurately extract semantic features?", "How does the fading channel affect semantic info?", "How does JSCC outperform separation-based schemes?"],
+                        objs: ["Design a Deep Autoencoder architecture.", "Develop a differentiable channel layer for end-to-end training.", "Compare performance using perceptual metrics (PSNR, SSIM)."],
+                        sys: "The system consists of a Semantic Encoder, Wireless Channel (AWGN/Rayleigh), and Semantic Decoder.",
+                        algo: "Joint Source-Channel Coding (JSCC) with semantic loss function.",
+                        outcomes: ["Prototype of a semantic communication system.", "Up to 90% bandwidth saving compared to JPEG."],
+                        refs: ["H. Xie, Z. Qin, G. Y. Li, 'Deep Learning Enabled Semantic Communication Systems,' IEEE Trans. Signal Process., 2021.", "D. Gündüz et al., 'Beyond Transmitting Bits: Context, Semantics, and Task-Oriented Communications,' IEEE JSAC, 2023."]
+                    }
                 }
             },
             // 2. ISAC
             {
                 id: 2, cat: "ISAC", tool: "MATLAB",
-                title: "تصميم شكل موجة OTFS للتحسس والاتصال المشترك (ISAC) للمركبات",
-                titleEn: "OTFS Waveform Design for Integrated Sensing and Comm (ISAC) in High-Mobility Vehicular Networks",
-                abstract: "دمج الرادار والاتصالات في إشارة واحدة باستخدام تعديل OTFS للتغلب على تأثير دوبلر في بيئات الطرق السريعة.",
-                gap: "تقنية OFDM تفشل في الحفاظ على تعامدها عند السرعات العالية، مما يسبب تداخلاً يقلل دقة الرادار والاتصال.",
-                sol: "استخدام مجال التأخير-دوبلر (Delay-Doppler Domain) لتصميم إشارة موحدة.",
-                
-                prop: {
-                    intro: "تعتبر تقنية التحسس والاتصال المشترك (ISAC) ركيزة أساسية في أنظمة المركبات الذكية، حيث تسمح بمشاركة الطيف والأجهزة. ومع زيادة سرعة المركبات، تبرز الحاجة لأشكال موجية جديدة تتجاوز قصور OFDM.",
-                    problem: "تعاني إشارات OFDM التقليدية من انزياح دوبلر العالي (High Doppler Shift) في البيئات سريعة التنقل، مما يؤدي إلى تداخل بين الحوامل الفرعية (ICI) وتدهور الأداء. كما أن استخدام إشارتين منفصلتين للرادار والاتصال يستهلك موارد الطيف.",
-                    questions: ["كيف يمكن تصميم إشارة OTFS تحمل البيانات وتقوم بوظيفة الرادار في آن واحد؟", "ما مدى دقة تقدير السرعة والمسافة باستخدام OTFS مقارنة بـ OFDM؟", "كيف يمكن التغلب على تعقيد المستقبل في OTFS؟"],
-                    objs: ["نمذجة قناة اتصال للمركبات عالية السرعة (High-Mobility Channel).", "تصميم إطار إشارة OTFS مزدوج الوظيفة.", "تحليل دالة الغموض (Ambiguity Function) للإشارة المقترحة."],
-                    sys_model: "نظام إرسال واستقبال يعتمد على تحويل Zak Transform للعمل في مجال التأخير-دوبلر، مع وجود أهداف رادارية ومستخدمي اتصالات.",
-                    algo: "خوارزمية كشف تعتمد على Message Passing (MP) لتقليل التداخل، وخوارزمية تقدير المعلمات الرادارية (Range-Velocity Estimation).",
-                    sim_tools: "MATLAB مع Phased Array System Toolbox و Communications Toolbox.",
-                    metrics: "Bit Error Rate (BER), Radar Resolution, Detection Probability",
-                    outcomes: ["شكل موجة ISAC جديد ومحسن.", "تحسين موثوقية الاتصال في السرعات العالية (أكثر من 120 كم/س).", "دقة رادارية عالية في تقدير السرعة."],
-                    refs: [
-                        "P. Raviteja et al., 'OTFS Modulation for Future Wireless Networks,' IEEE Wireless Commun., 2020.",
-                        "F. Liu et al., 'Integrated Sensing and Communications: Toward Dual-Functional Radar-Communication Systems,' IEEE T-WCOM, 2022."
-                    ]
+                content: {
+                    ar: {
+                        title: "تصميم موجة OTFS للتحسس والاتصال المشترك (ISAC) في بيئات عالية التنقل",
+                        abstract: "دمج وظيفتي الرادار والاتصال في إشارة واحدة باستخدام تعديل OTFS للتغلب على تأثير دوبلر العالي في شبكات المركبات.",
+                        intro: "تتطلب المركبات ذاتية القيادة قدرات اتصال موثوقة واستشعار دقيق للمحيط. تقنية ISAC تدمج هاتين الوظيفتين لتوفير الطيف والطاقة.",
+                        problem: "تعاني موجات OFDM التقليدية من تداخل بين الحوامل (ICI) عند السرعات العالية بسبب انزياح دوبلر، مما يقلل من دقة الرادار وموثوقية الاتصال.",
+                        questions: ["كيف يمكن تصميم إشارة OTFS مزدوجة الوظيفة؟", "ما هي دقة الرادار المحققة في مجال التأخير-دوبلر؟"],
+                        objs: ["تصميم إطار إشارة OTFS.", "تحليل دالة الغموض الرادارية.", "تقييم معدل الخطأ في الاتصال."],
+                        sys: "نظام إرسال واستقبال OTFS مع وجود أهداف رادارية ومستخدمي اتصال.",
+                        algo: "Message Passing Detection و Range-Velocity Estimation.",
+                        outcomes: ["شكل موجة مقاوم لتأثير دوبلر.", "دقة عالية في كشف سرعة ومكان الأهداف."],
+                        refs: ["P. Raviteja et al., 'OTFS Modulation for Future Wireless Networks,' IEEE Wireless Commun., 2020.", "F. Liu et al., 'Integrated Sensing and Communications,' IEEE T-WCOM, 2022."]
+                    },
+                    en: {
+                        title: "OTFS Waveform Design for Integrated Sensing and Comm (ISAC) in High-Mobility Environments",
+                        abstract: "Merging Radar and Communication into a single waveform using OTFS modulation to combat high Doppler shifts in vehicular networks.",
+                        intro: "Autonomous vehicles require reliable comms and accurate sensing. ISAC merges these functionalities to save spectrum and energy.",
+                        problem: "Traditional OFDM suffers from Inter-Carrier Interference (ICI) at high speeds due to Doppler shifts, degrading both radar accuracy and comms reliability.",
+                        questions: ["How to design a dual-function OTFS waveform?", "What is the achievable radar resolution in Delay-Doppler domain?"],
+                        objs: ["Design OTFS frame structure.", "Analyze Radar Ambiguity Function.", "Evaluate Bit Error Rate (BER)."],
+                        sys: "OTFS Transceiver system with radar targets and comms users.",
+                        algo: "Message Passing Detection and Range-Velocity Estimation.",
+                        outcomes: ["Doppler-resilient waveform.", "High accuracy in target range/velocity estimation."],
+                        refs: ["P. Raviteja et al., 'OTFS Modulation for Future Wireless Networks,' IEEE Wireless Commun., 2020.", "F. Liu et al., 'Integrated Sensing and Communications,' IEEE T-WCOM, 2022."]
+                    }
                 }
             },
             // 3. Active RIS
             {
-                id: 3, cat: "RIS / MIMO", tool: "Python/TensorFlow",
-                title: "تحسين كفاءة الطاقة في الأسطح الذكية النشطة (Active RIS) باستخدام DRL",
-                titleEn: "Energy Efficiency Optimization in Active RIS using Deep Reinforcement Learning",
-                abstract: "حل مشكلة 'التوهين المضاعف' في RIS التقليدية باستخدام عناصر نشطة، وضبطها باستخدام خوارزمية DRL.",
-                gap: "الأسطح الذكية السلبية لا تعكس طاقة كافية. الأسطح النشطة تستهلك طاقة وتحتاج لموازنة دقيقة.",
-                sol: "Active RIS مع مضخمات إشارة يتم التحكم بها عبر خوارزمية DDPG.",
-
-                prop: {
-                    intro: "تعد الأسطح الذكية القابلة لإعادة التشكيل (RIS) تقنية واعدة لتحسين التغطية في 6G. ومع ذلك، تعاني الأسطح السلبية (Passive) من تأثير 'توهين المسار المضاعف'. ظهرت الأسطح النشطة (Active RIS) كحل قوي لتضخيم الإشارة المنعكسة.",
-                    problem: "على الرغم من تفوق Active RIS، إلا أنها تستهلك طاقة إضافية وتضيف ضجيجاً حرارياً (Thermal Noise). المشكلة تكمن في كيفية ضبط مصفوفة الطور وعامل التكبير بشكل لحظي لتعظيم كفاءة الطاقة (Energy Efficiency) وليس فقط معدل النقل.",
-                    questions: ["كيف يمكن صياغة مشكلة التحسين المشترك لمصفوفة الطور والتكبير؟", "هل يمكن للتعلم العميق المعزز (DRL) حل هذه المشكلة المعقدة في الزمن الحقيقي؟"],
-                    objs: ["صياغة مسألة تعظيم كفاءة الطاقة (Bits/Joule).", "تطوير خوارزمية DDPG للتحكم المستمر في عناصر RIS.", "مقارنة الأداء مع الطرق التقليدية ومع Passive RIS."],
-                    sys_model: "محطة قاعدة (BS)، سطح ذكي نشط يحتوي على N عنصر عاكس مع مضخمات، ومستخدمين متعددين.",
-                    algo: "Deep Deterministic Policy Gradient (DDPG) حيث تكون الحالة (State) هي معلومات القناة، والإجراء (Action) هو قيم الطور والتكبير.",
-                    sim_tools: "Python باستخدام مكتبات TensorFlow أو PyTorch للمحاكاة وتدريب الوكيل.",
-                    metrics: "Energy Efficiency (EE), Spectral Efficiency (SE), Convergence Time",
-                    outcomes: ["خوارزمية ذكية للتحكم في Active RIS.", "تحسن ملحوظ في التغطية للمستخدمين عند حافة الخلية.", "موازنة مثالية بين الأداء واستهلاك الطاقة."],
-                    refs: [
-                        "Z. Zhang et al., 'Active RIS vs. Passive RIS: Which Will Prevail in 6G?,' IEEE Trans. Commun., 2023.",
-                        "C. Huang et al., 'Reconfigurable Intelligent Surfaces for Energy Efficiency in Wireless Communication,' IEEE T-WCOM, 2019."
-                    ]
+                id: 3, cat: "RIS / AI", tool: "Python/TensorFlow",
+                content: {
+                    ar: {
+                        title: "تحسين كفاءة الطاقة في الأسطح الذكية النشطة (Active RIS) باستخدام التعلم العميق المعزز",
+                        abstract: "استخدام عناصر نشطة في RIS لتعويض خسارة المسار، وضبطها باستخدام خوارزمية DRL لتعظيم كفاءة الطاقة.",
+                        intro: "تعد الأسطح الذكية (RIS) حلاً واعداً للتغطية، لكن النوع السلبي يعاني من توهين مضاعف. الأسطح النشطة تحل المشكلة ولكنها تستهلك طاقة.",
+                        problem: "صعوبة الموازنة اللحظية بين تكبير الإشارة واستهلاك الطاقة والضجيج الحراري في مصفوفة معقدة.",
+                        questions: ["كيف نضبط طور وتكبير العناصر في الزمن الحقيقي؟", "كيف نوازن بين الأداء والطاقة؟"],
+                        objs: ["صياغة مسألة تعظيم كفاءة الطاقة.", "تطوير خوارزمية DDPG للتحكم.", "المقارنة مع Passive RIS."],
+                        sys: "محطة قاعدة + Active RIS + مستخدمين.",
+                        algo: "Deep Deterministic Policy Gradient (DDPG).",
+                        outcomes: ["خوارزمية تحكم ذكية.", "تحسين تغطية المستخدمين عند الحافة."],
+                        refs: ["Z. Zhang et al., 'Active RIS vs. Passive RIS,' IEEE Trans. Commun., 2023.", "C. Huang et al., 'Reconfigurable Intelligent Surfaces for Energy Efficiency,' IEEE T-WCOM, 2019."]
+                    },
+                    en: {
+                        title: "Energy Efficiency Optimization in Active RIS using Deep Reinforcement Learning",
+                        abstract: "Using active elements in RIS to compensate for path loss, optimized via DRL algorithms to maximize energy efficiency.",
+                        intro: "RIS is promising for coverage, but passive types suffer double fading. Active RIS solves this but consumes power.",
+                        problem: "Difficulty in real-time balancing of signal amplification, power consumption, and thermal noise in a complex array.",
+                        questions: ["How to tune phase/amplification in real-time?", "How to trade-off performance vs power?"],
+                        objs: ["Formulate Energy Efficiency problem.", "Develop DDPG control algorithm.", "Compare with Passive RIS."],
+                        sys: "Base Station + Active RIS + Users.",
+                        algo: "Deep Deterministic Policy Gradient (DDPG).",
+                        outcomes: ["Intelligent control algorithm.", "Improved coverage for edge users."],
+                        refs: ["Z. Zhang et al., 'Active RIS vs. Passive RIS,' IEEE Trans. Commun., 2023.", "C. Huang et al., 'Reconfigurable Intelligent Surfaces for Energy Efficiency,' IEEE T-WCOM, 2019."]
+                    }
                 }
-            },
-            // 4. UAV NOMA
-            {
-                id: 4, cat: "UAV / NOMA", tool: "MATLAB",
-                title: "تخصيص الموارد في شبكات NOMA المعتمدة على الطائرات المسيرة",
-                titleEn: "Resource Allocation in UAV-Assisted NOMA Networks",
-                abstract: "تحسين مسار الدرون وتخصيص الطاقة لخدمة مستخدمين أرضيين باستخدام تقنية الوصول المتعدد غير المتعامد.",
-                gap: "الشبكات الثابتة لا تغطي مناطق الكوارث بكفاءة. OMA محدودة السعة.",
-                sol: "خوارزمية تحسين مشترك (Joint Optimization) للمسار والطاقة.",
-                prop: {
-                    intro: "توفر الطائرات المسيرة (UAVs) مرونة عالية كمحطات قاعدة جوية، خاصة في حالات الطوارئ. دمجها مع تقنية NOMA يزيد من الكفاءة الطيفية ويسمح بخدمة عدد أكبر من المستخدمين.",
-                    problem: "التحدي الرئيسي هو الطبيعة الديناميكية للدرون واستهلاك البطارية المحدود، بالإضافة إلى تداخل المستخدمين في NOMA. يتطلب ذلك تحسيناً دقيقاً للمسار (Trajectory) وتخصيص الطاقة (Power Allocation).",
-                    questions: ["ما هو المسار الأمثل للدرون لتعظيم معدل البيانات الكلي؟", "كيف يتم توزيع الطاقة بين مستخدمي NOMA القريبين والبعيدين؟"],
-                    objs: ["اشتقاق صيغة رياضية لمعدل البيانات الكلي (Sum-Rate).", "فصل المسألة المعقدة (Non-convex) إلى مسائل فرعية وحلها.", "محاكاة سيناريوهات متعددة للمستخدمين."],
-                    sys_model: "درون يحلق على ارتفاع H، يخدم مستخدمين موزعين عشوائياً باستخدام Downlink NOMA.",
-                    algo: "Block Coordinate Descent (BCD) و Successive Convex Approximation (SCA).",
-                    sim_tools: "MATLAB (Optimization Toolbox).",
-                    metrics: "Sum-Rate, User Fairness, Outage Probability",
-                    outcomes: ["مسار درون محسن يغطي المستخدمين بكفاءة.", "خوارزمية تخصيص طاقة تضمن العدالة بين المستخدمين.", "تحليل أداء الشبكة مقارنة بـ OMA."],
-                    refs: [
-                        "Y. Zeng et al., 'Wireless Communications with Unmanned Aerial Vehicles: Opportunities and Challenges,' IEEE Commun. Mag., 2016.",
-                        "M. F. Sohail et al., 'Non-Orthogonal Multiple Access for Unmanned Aerial Vehicle Assisted Communication,' IEEE Access, 2018."
-                    ]
-                }
-            },
-             // 5. WiFi-LiFi
-             {
-                id: 5, cat: "Optical", tool: "MATLAB/Simulink",
-                title: "نظام هجين WiFi-LiFi مع آلية تسليم ذكية (Intelligent Handover)",
-                titleEn: "Hybrid WiFi-LiFi System with Intelligent Fuzzy Logic Handover",
-                abstract: "تصميم شبكة داخلية تدمج LiFi مع WiFi باستخدام المنطق الضبابي لضمان استمرارية الخدمة.",
-                gap: "الانقطاع المتكرر في LiFi بسبب حركة المستخدم وتوجيه الضوء.",
-                sol: "متحكم منطق ضبابي (Fuzzy Logic) يتخذ قرار التحويل.",
-                prop: {
-                    intro: "مع ازدحام طيف الراديو، تقدم تقنية LiFi حلاً واعداً للسرعات العالية داخل المباني. ومع ذلك، فإن تغطيتها محدودة وتتأثر بالحواجز، مما يجعل دمجها مع WiFi في شبكة هجينة أمراً ضرورياً.",
-                    problem: "آليات التسليم التقليدية (Handover) التي تعتمد فقط على قوة الإشارة (RSS) تؤدي إلى تبديل متكرر وغير ضروري (Ping-Pong Effect) في الشبكات الهجينة، مما يقطع الاتصال ويقلل جودة الخدمة.",
-                    questions: ["ما هي المعايير المثلى لاتخاذ قرار التسليم في الشبكات الهجينة؟", "كيف يمكن للمنطق الضبابي تحسين القرار مقارنة بالطرق التقليدية؟"],
-                    objs: ["تصميم متحكم منطق ضبابي (FLC) بمدخلات متعددة.", "تقليل معدل التسليم غير الضروري.", "تعظيم معدل النقل الكلي للمستخدم."],
-                    sys_model: "غرفة تحتوي على وحدات LiFi ونقطة وصول WiFi، ومستخدم يتحرك بمسار عشوائي (Random Waypoint).",
-                    algo: "Fuzzy Logic Rules (If-Then rules) بناءً على RSS، سرعة المستخدم، وحمل الشبكة.",
-                    sim_tools: "MATLAB و Simulink.",
-                    metrics: "Throughput, Handover Rate, Ping-Pong Rate",
-                    outcomes: ["نظام تسليم ذكي وسلس.", "تقليل انقطاع الخدمة بشكل ملحوظ.", "زيادة متوسط سرعة البيانات للمستخدم."],
-                    refs: [
-                        "H. Haas et al., 'LiFi is a Paradigm-Shifting 5G Technology,' Rev. Phys., 2018.",
-                        "X. Li et al., 'Handover Mechanism for Hybrid LiFi and WiFi Networks,' IEEE Commun. Surveys Tuts., 2020."
-                    ]
-                }
-            },
-            // 6 to 20 Generic Template
-            // ... (Other topics follow the same pattern, simplified for code brevity in this view but functionality works for all)
+            }
         ];
-        
-        // Add Generic template for the rest of topics to work
-        for (let i = 6; i <= 20; i++) {
+
+        // Generate Filler Topics (4-20)
+        for(let i=4; i<=20; i++) {
             topics.push({
                 id: i, cat: "Advanced Comm", tool: "MATLAB/Python",
-                title: `موضوع بحثي متقدم رقم ${i} في هندسة الاتصالات`,
-                titleEn: `Advanced Research Topic #${i} in Telecommunications`,
-                abstract: "هذا الموضوع يتناول إحدى القضايا الحديثة في الجيل السادس أو الذكاء الاصطناعي.",
-                gap: "الحاجة لتحسين الأداء في ظل القيود الحالية.",
-                sol: "استخدام خوارزميات متقدمة.",
-                prop: {
-                    intro: "تعتبر أنظمة الاتصالات الحديثة حجر الزاوية في التطور التكنولوجي...",
-                    problem: "المشكلة الرئيسية تكمن في محدودية الموارد والتداخل...",
-                    questions: ["كيف يمكن تحسين الأداء؟", "ما هي المقايضات الممكنة؟"],
-                    objs: ["نمذجة النظام.", "تحسين الخوارزمية.", "تقييم النتائج."],
-                    sys_model: "نموذج رياضي يمثل القناة والمستقبل والمرسل.",
-                    algo: "خوارزمية تحسين (Optimization Algorithm).",
-                    sim_tools: "MATLAB أو Python.",
-                    metrics: "BER, Throughput, SNR",
-                    outcomes: ["نتائج محاكاة تثبت فعالية الطريقة المقترحة."],
-                    refs: ["Reference 1 (IEEE Format).", "Reference 2 (IEEE Format)."]
+                content: {
+                    ar: {
+                        title: `موضوع بحثي متقدم رقم ${i} في الجيل السادس`,
+                        abstract: "دراسة تحليلية ومحاكاة لتحسين أداء الشبكات اللاسلكية المستقبلية في ظل القيود الحالية.",
+                        intro: "تواجه شبكات الاتصالات طلباً متزايداً على السرعة والموثوقية، مما يتطلب حلولاً هندسية مبتكرة.",
+                        problem: "محدودية الطيف واستهلاك الطاقة العالي في الشبكات الحالية.",
+                        questions: ["كيف يمكن تحسين الكفاءة الطيفية؟", "ما هو دور الخوارزميات الذكية؟"],
+                        objs: ["بناء نموذج رياضي للنظام.", "تطوير خوارزمية تحسين.", "تقييم الأداء بالمحاكاة."],
+                        sys: "نظام اتصالات MIMO متعدد المستخدمين.",
+                        algo: "خوارزمية تحسين محدبة (Convex Optimization).",
+                        outcomes: ["زيادة في معدل النقل.", "تقليل استهلاك الطاقة."],
+                        refs: ["Reference 1 (IEEE Format).", "Reference 2 (IEEE Format)."]
+                    },
+                    en: {
+                        title: `Advanced Research Topic #${i} in 6G Networks`,
+                        abstract: "Analytical study and simulation to enhance future wireless network performance under current constraints.",
+                        intro: "Telecom networks face increasing demand for speed and reliability, requiring innovative engineering solutions.",
+                        problem: "Spectrum scarcity and high energy consumption in current networks.",
+                        questions: ["How to improve spectral efficiency?", "What is the role of intelligent algorithms?"],
+                        objs: ["Build mathematical system model.", "Develop optimization algorithm.", "Evaluate performance via simulation."],
+                        sys: "Multi-user MIMO communication system.",
+                        algo: "Convex Optimization Algorithm.",
+                        outcomes: ["Increased throughput.", "Reduced energy consumption."],
+                        refs: ["Reference 1 (IEEE Format).", "Reference 2 (IEEE Format)."]
+                    }
                 }
             });
         }
@@ -468,95 +419,211 @@
         let currentTopic = null;
         let chartInstance = null;
 
+        const ui = {
+            ar: { 
+                navTitle: "مدير المقترحات البحثية", btnLang: "English Interface", sidebarTitle: "قائمة المواضيع", selectMsg: "اختر موضوعاً لاستعراض التفاصيل",
+                btnGenTitle: "تجهيز ملف المقترح (Proposal)", btnGenDesc: "إنشاء ملف كامل جاهز للطباعة والتعديل", lblAbstract: "الملخص",
+                // Modal Labels
+                btnWord: "تحميل Word", btnPdf: "حفظ PDF (طباعة)", btnClose: "إغلاق",
+                // Paper Labels
+                txtUni: "[اسم الجامعة]", txtCollege: "[اسم الكلية - اسم القسم]",
+                paperHeader: "خطة بحث لرسالة الماجستير",
+                lblStudent: "الطالب:", lblSupervisor: "المشرف:", lblDate: "التاريخ:",
+                headIntro: "1. المقدمة", headProblem: "2. مشكلة البحث", lblQuestions: "أسئلة البحث:",
+                headObjs: "3. الأهداف", headMethod: "4. المنهجية",
+                lblSys: "أ. نموذج النظام:", lblAlgo: "ب. الخوارزميات:", lblTools: "ج. الأدوات:",
+                headOutcomes: "5. النتائج المتوقعة", headRefs: "6. المراجع",
+                lblSigStudent: "توقيع الطالب", lblSigSuper: "توقيع المشرف"
+            },
+            en: { 
+                navTitle: "Thesis Proposal Manager", btnLang: "الواجهة العربية", sidebarTitle: "Topics List", selectMsg: "Select a topic to view details",
+                btnGenTitle: "Prepare Proposal File", btnGenDesc: "Create full printable/editable file", lblAbstract: "Abstract",
+                // Modal Labels
+                btnWord: "Download Word", btnPdf: "Save PDF (Print)", btnClose: "Close",
+                // Paper Labels
+                txtUni: "[University Name]", txtCollege: "[College Name - Department]",
+                paperHeader: "Master's Thesis Proposal",
+                lblStudent: "Student:", lblSupervisor: "Supervisor:", lblDate: "Date:",
+                headIntro: "1. Introduction", headProblem: "2. Problem Statement", lblQuestions: "Research Questions:",
+                headObjs: "3. Objectives", headMethod: "4. Methodology",
+                lblSys: "A. System Model:", lblAlgo: "B. Algorithms:", lblTools: "C. Tools:",
+                headOutcomes: "5. Expected Outcomes", headRefs: "6. References",
+                lblSigStudent: "Student Signature", lblSigSuper: "Supervisor Signature"
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
-            renderList(topics);
-            document.getElementById('doc-date').textContent = new Date().toLocaleDateString('ar-EG');
+            renderList();
+            document.getElementById('paper-date').textContent = new Date().toLocaleDateString('en-GB');
         });
 
-        function renderList(data) {
+        function toggleLang() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            updateUI();
+            renderList();
+            if(currentTopic) loadTopic(currentTopic.id);
+        }
+
+        function updateUI() {
+            const t = ui[currentLang];
+            document.getElementById('nav-title').textContent = t.navTitle;
+            document.getElementById('lang-btn-text').textContent = t.btnLang;
+            document.getElementById('sidebar-title').textContent = t.sidebarTitle;
+            document.getElementById('select-msg').textContent = t.selectMsg;
+            document.getElementById('btn-gen-title').textContent = t.btnGenTitle;
+            document.getElementById('btn-gen-desc').textContent = t.btnGenDesc;
+            document.getElementById('lbl-abstract').textContent = t.lblAbstract;
+
+            // Modal Buttons
+            document.getElementById('btn-dl-word').textContent = t.btnWord;
+            document.getElementById('btn-dl-pdf').textContent = t.btnPdf;
+            document.getElementById('btn-close').textContent = t.btnClose;
+
+            // Paper Static Text
+            document.getElementById('txt-uni').textContent = t.txtUni;
+            document.getElementById('txt-college').textContent = t.txtCollege;
+            document.getElementById('paper-header-text').textContent = t.paperHeader;
+            
+            document.getElementById('lbl-student').textContent = t.lblStudent;
+            document.getElementById('lbl-supervisor').textContent = t.lblSupervisor;
+            document.getElementById('lbl-date').textContent = t.lblDate;
+            
+            document.getElementById('head-intro').textContent = t.headIntro;
+            document.getElementById('head-problem').textContent = t.headProblem;
+            document.getElementById('lbl-questions').textContent = t.lblQuestions;
+            
+            document.getElementById('head-objs').textContent = t.headObjs;
+            document.getElementById('head-method').textContent = t.headMethod;
+            document.getElementById('lbl-sys').textContent = t.lblSys;
+            document.getElementById('lbl-algo').textContent = t.lblAlgo;
+            document.getElementById('lbl-tools').textContent = t.lblTools;
+            
+            document.getElementById('head-outcomes').textContent = t.headOutcomes;
+            document.getElementById('head-refs').textContent = t.headRefs;
+            
+            document.getElementById('lbl-sig-student').textContent = t.lblSigStudent;
+            document.getElementById('lbl-sig-super').textContent = t.lblSigSuper;
+        }
+
+        function renderList() {
             const list = document.getElementById('topic-list');
             list.innerHTML = '';
-            data.forEach(t => {
-                const item = document.createElement('div');
-                item.className = 'p-3 mb-2 bg-white border border-slate-200 rounded hover:bg-blue-50 cursor-pointer transition-colors';
-                item.innerHTML = `
-                    <div class="flex justify-between">
-                        <span class="text-[10px] font-bold text-blue-600 bg-blue-100 px-1 rounded">${t.cat}</span>
-                    </div>
-                    <h3 class="text-xs font-bold mt-1 leading-snug">${t.title}</h3>
-                `;
-                item.onclick = () => loadTopic(t.id);
-                list.appendChild(item);
+            topics.forEach(t => {
+                const c = t.content[currentLang];
+                const el = document.createElement('div');
+                el.className = 'p-3 mb-2 bg-white border border-slate-200 rounded hover:bg-blue-50 cursor-pointer transition-colors shadow-sm';
+                el.innerHTML = `<div class="text-[10px] font-bold text-blue-600 uppercase mb-1">${t.cat}</div><div class="text-xs font-bold text-slate-700">${c.title}</div>`;
+                el.onclick = () => loadTopic(t.id);
+                list.appendChild(el);
             });
         }
 
         function filterList() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = topics.filter(t => t.title.toLowerCase().includes(query) || t.cat.toLowerCase().includes(query));
-            renderList(filtered);
+            const q = document.getElementById('search-input').value.toLowerCase();
+            const list = document.getElementById('topic-list');
+            list.innerHTML = '';
+            topics.forEach(t => {
+                const c = t.content[currentLang];
+                if(c.title.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q)) {
+                    const el = document.createElement('div');
+                    el.className = 'p-3 mb-2 bg-white border border-slate-200 rounded hover:bg-blue-50 cursor-pointer transition-colors shadow-sm';
+                    el.innerHTML = `<div class="text-[10px] font-bold text-blue-600 uppercase mb-1">${t.cat}</div><div class="text-xs font-bold text-slate-700">${c.title}</div>`;
+                    el.onclick = () => loadTopic(t.id);
+                    list.appendChild(el);
+                }
+            });
         }
 
         function loadTopic(id) {
             currentTopic = topics.find(t => t.id === id);
+            const c = currentTopic.content[currentLang];
             
             document.getElementById('empty-state').classList.add('hidden');
             document.getElementById('detail-panel').classList.remove('hidden');
-
+            
             document.getElementById('dt-cat').textContent = currentTopic.cat;
             document.getElementById('dt-tool').textContent = currentTopic.tool;
-            document.getElementById('dt-title').textContent = currentTopic.title;
-            document.getElementById('dt-title-en').textContent = currentTopic.titleEn;
-            document.getElementById('dt-abstract').textContent = currentTopic.abstract;
-            document.getElementById('dt-gap').textContent = currentTopic.gap;
-            document.getElementById('dt-sol').textContent = currentTopic.sol;
+            document.getElementById('dt-title').textContent = c.title;
+            document.getElementById('dt-abstract').textContent = c.abstract;
 
             updateChart();
         }
 
-        function generateProposal() {
-            if (!currentTopic) return;
-            const p = currentTopic.prop;
+        function openProposalModal() {
+            if(!currentTopic) return;
+            const c = currentTopic.content[currentLang];
+            const methodIntro = currentLang === 'ar' ? 
+                `تعتمد هذه الرسالة على منهجية المحاكاة الحاسوبية والتحليل الرياضي باستخدام بيئة ${currentTopic.tool}.` : 
+                `This thesis relies on computer simulation methodology and mathematical analysis using the ${currentTopic.tool} environment.`;
+
+            // Fill Paper Data
+            document.getElementById('paper-title').textContent = c.title;
             
-            document.getElementById('doc-title').textContent = currentTopic.title;
-            document.getElementById('doc-title-en').textContent = currentTopic.titleEn;
+            document.getElementById('paper-intro').textContent = c.intro;
+            document.getElementById('paper-problem').textContent = c.problem;
             
-            document.getElementById('doc-intro').textContent = p.intro;
-            document.getElementById('doc-problem').textContent = p.problem;
+            document.getElementById('paper-questions').innerHTML = c.questions.map(q => `<li>${q}</li>`).join('');
+            document.getElementById('paper-objs').innerHTML = c.objs.map(o => `<li>${o}</li>`).join('');
             
-            // Lists
-            document.getElementById('doc-questions').innerHTML = p.questions.map(q => `<li>${q}</li>`).join('');
-            document.getElementById('doc-objs').innerHTML = p.objs.map(o => `<li>${o}</li>`).join('');
+            document.getElementById('paper-method-intro').textContent = methodIntro;
+            document.getElementById('paper-sys-model').textContent = c.sys;
+            document.getElementById('paper-algo').textContent = c.algo;
+            document.getElementById('paper-tools').textContent = currentTopic.tool;
             
-            // Method
-            document.getElementById('doc-method-intro').textContent = `تعتمد هذه الدراسة على منهجية المحاكاة الحاسوبية والتحليل الرياضي. سيتم استخدام ${currentTopic.tool} لبناء النموذج المقترح.`;
-            document.getElementById('doc-sys-model').textContent = p.sys_model;
-            document.getElementById('doc-algo').textContent = p.algo;
-            document.getElementById('doc-sim-tools').textContent = p.sim_tools;
-            document.getElementById('doc-metrics').textContent = p.metrics;
-            
-            document.getElementById('doc-outcomes').innerHTML = p.outcomes.map(o => `<li>${o}</li>`).join('');
-            document.getElementById('doc-refs').innerHTML = p.refs.map(r => `<li>${r}</li>`).join('');
+            document.getElementById('paper-outcomes').innerHTML = c.outcomes.map(o => `<li>${o}</li>`).join('');
+            document.getElementById('paper-refs').innerHTML = c.refs.map(r => `<li>${r}</li>`).join('');
 
             document.getElementById('proposal-modal').classList.remove('hidden');
         }
 
+        function closeModal() {
+            document.getElementById('proposal-modal').classList.add('hidden');
+        }
+
+        function printProposal() {
+            window.print();
+        }
+
+        function downloadWord() {
+            const header = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+                      xmlns:w='urn:schemas-microsoft-com:office:word' 
+                      xmlns='http://www.w3.org/TR/REC-html40' dir='${currentLang === 'ar' ? 'rtl' : 'ltr'}'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>${currentTopic.content[currentLang].title}</title>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; font-size: 12pt; }
+                        h1 { font-size: 16pt; font-weight: bold; text-align: center; }
+                        h2 { font-size: 14pt; font-weight: bold; border-bottom: 1px solid #000; margin-top: 20px; }
+                        p { text-align: justify; line-height: 1.5; }
+                        li { margin-bottom: 5px; }
+                    </style>
+                </head><body>`;
+            
+            const content = document.getElementById("paper-content").innerHTML;
+            const sourceHTML = header + content + "</body></html>";
+            
+            const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+            const fileDownload = document.createElement("a");
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            fileDownload.download = 'Thesis_Proposal.doc';
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+        }
+
         function updateChart() {
             const ctx = document.getElementById('radarChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-            
+            if(chartInstance) chartInstance.destroy();
             chartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['الجدة (Novelty)', 'التعقيد الرياضي', 'وقت المحاكاة', 'توفر المصادر', 'متطلبات البرمجة'],
+                    labels: ['Novelty', 'Math Depth', 'Sim Complexity', 'Data Availability', 'Coding Skill'],
                     datasets: [{
-                        label: 'مؤشرات الموضوع',
-                        data: [
-                            Math.floor(Math.random() * 20) + 80, 
-                            Math.floor(Math.random() * 30) + 60,
-                            Math.floor(Math.random() * 20) + 70,
-                            Math.floor(Math.random() * 20) + 70,
-                            Math.floor(Math.random() * 30) + 60
-                        ],
+                        label: 'Metrics',
+                        data: [85, 75, 60, 50, 80],
                         backgroundColor: 'rgba(37, 99, 235, 0.2)',
                         borderColor: '#2563eb',
                         pointBackgroundColor: '#2563eb'
@@ -567,10 +634,6 @@
                     plugins: { legend: { display: false } }
                 }
             });
-        }
-
-        function toggleLang() {
-            alert("هذه الميزة متاحة في النسخة الكاملة. الواجهة الحالية تدعم اللغة العربية للأغراض الأكاديمية.");
         }
     </script>
 </body>
